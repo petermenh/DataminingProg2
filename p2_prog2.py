@@ -10,6 +10,7 @@ http://www.nltk.org/book/ch01.html
 
 Code snippets from programming assignment 1
 '''
+import math
 import time
 import os
 import operator
@@ -120,20 +121,38 @@ def docdocsim(filename1,filename2):
 def querydocsim(qstring,filename):
     return cosinesim(getqvec(qstring),gettfidfvec(filename))
 
+def check_if_num(a):
+   try:
+       float(a)
+   except ValueError:
+       return False
+   return True
+
 #----------------Main------------------------------------------
 start_time = time.time()
 
-csvAtt = pandas.read_csv('attributes2.csv')
+csvAtt = pandas.read_csv('attributes.csv')
 for i in range(0,len(csvAtt)):
-	nameTok = tokenize(csvAtt.name[i])
-	valueTok = tokenize(csvAtt.value[i])
-	if csvAtt.product_uid[i] not in itemDict:
-			itemDict[csvAtt.product_uid[i]] = nameTok + valueTok
-	else:
-			itemDict[csvAtt.product_uid[i]] = itemDict[csvAtt.product_uid[i]] + nameTok + valueTok
+    if check_if_num(csvAtt.name[i]) and type(csvAtt.name[i])==float:
+        if math.isnan(csvAtt.name[i]):
+            nameTok = tokenize(" ")
+    else:
+        nameTok = tokenize(csvAtt.name[i])
+
+    if check_if_num(csvAtt.value[i]) and type(csvAtt.value[i])==float:
+        if math.isnan(csvAtt.value[i]):
+            nameTok = tokenize(" ")
+    else:
+        valueTok = tokenize(csvAtt.value[i])
+    
+    if csvAtt.product_uid[i] not in itemDict:
+        itemDict[csvAtt.product_uid[i]] = nameTok + valueTok
+    else:
+        itemDict[csvAtt.product_uid[i]] = itemDict[csvAtt.product_uid[i]] + nameTok + valueTok
 
 
 print('time: ', time.time()-start_time)
+
 '''
 for i in range(0,len(csvAtt)):
 	if ((not type(csvAtt.name[i]) == int) and (not type(csvAtt.name[i]) == float)) and ((not type(csvAtt.value[i]) == int) and (not type(csvAtt.value[i]) == float)):
