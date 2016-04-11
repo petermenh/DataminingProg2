@@ -131,7 +131,26 @@ def check_if_num(a):
 #----------------Main------------------------------------------
 start_time = time.time()
 
-csvAtt = pandas.read_csv('attributes.csv')
+csvAtt = pandas.read_csv('attributes3.csv')
+
+for i in range(0,len(csvAtt)):
+    if type(csvAtt.name[i])==float:
+        if math.isnan(csvAtt.name[i]):
+            nameTok = tokenize(" ")
+    else:
+        nameTok = tokenize(csvAtt.name[i])
+
+    if type(csvAtt.value[i])==float:
+        if math.isnan(csvAtt.value[i]):
+            nameTok = tokenize(" ")
+    else:
+        valueTok = tokenize(csvAtt.value[i])
+    
+    if csvAtt.product_uid[i] not in itemDict:
+        itemDict[csvAtt.product_uid[i]] = nameTok + valueTok
+    else:
+        itemDict[csvAtt.product_uid[i]] = itemDict[csvAtt.product_uid[i]] + nameTok + valueTok
+'''
 for i in range(0,len(csvAtt)):
     if check_if_num(csvAtt.name[i]) and type(csvAtt.name[i])==float:
         if math.isnan(csvAtt.name[i]):
@@ -149,7 +168,7 @@ for i in range(0,len(csvAtt)):
         itemDict[csvAtt.product_uid[i]] = nameTok + valueTok
     else:
         itemDict[csvAtt.product_uid[i]] = itemDict[csvAtt.product_uid[i]] + nameTok + valueTok
-
+'''
 
 print('time: ', time.time()-start_time)
 
